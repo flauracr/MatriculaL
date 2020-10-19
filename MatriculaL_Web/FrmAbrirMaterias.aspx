@@ -52,18 +52,18 @@
                 <Columns>
                     <asp:TemplateField>
                         <ItemTemplate>
-                            <asp:LinkButton ID="lnkModificar" runat="server" CommandArgument='<%# Eval("ID_MATERIA_ABIERTA ").ToString() %>' CommandName="Modificar">Modificar</asp:LinkButton>
+                            <asp:LinkButton ID="lnkModificar" runat="server" CommandArgument='<%# Eval("ID_MATERIA_ABIERTA").ToString() %>' CommandName="Modificar" OnCommand="lnkModificar_Command">Modificar</asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField>
                         <ItemTemplate>
-                            <asp:LinkButton ID="lnkEliminar" runat="server" CommandArgument='<%# Eval("ID_MATERIA_ABIERTA ").ToString() %>' CommandName="Eliminar">Eliminar</asp:LinkButton>
+                            <asp:LinkButton ID="lnkEliminar" runat="server" CommandArgument='<%# Eval("ID_MATERIA_ABIERTA").ToString() %>' CommandName="Eliminar" OnCommand="lnkEliminar_Command">Eliminar</asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:BoundField DataField="ID_MATERIA_ABIERTA " HeaderText="Id" />
+                    <asp:BoundField DataField="ID_MATERIA_ABIERTA" HeaderText="Id" />
                     <asp:BoundField DataField="ID_MATERIA" HeaderText="IdMateria" />
                     <asp:BoundField DataField="CEDULA_PROFESOR" HeaderText="CedulaProfesor" />
-                    <asp:BoundField DataField="CEDULA_PROFESOR" HeaderText="Grupo" />
+                    <asp:BoundField DataField="GRUPO" HeaderText="Grupo" />
                     <asp:BoundField DataField="CUPO" HeaderText="Cupo" />
                     <asp:BoundField DataField="ANIO" HeaderText="Anio" />
                 </Columns>

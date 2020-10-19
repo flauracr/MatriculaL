@@ -19,22 +19,32 @@ namespace MatriculaL_Web
         private bool Cargando { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
+
             try
             {
                 if (!Page.IsPostBack)
                 {
                     CargarComboMaterias();
                     CargarComboProfesor();
-                    
                     CargarLista();
                 }
             }
             catch (Exception ex)
             {
-                //trhrow
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 script = string.Format("javascrip:mostrarMensaje('{0}')", ex.Message);
                 ScriptManager.RegisterStartupScript(this, typeof(string), "MensajeRetorno", script, true);
             }
+        }
+
+
+        public void Limpiar()
+        {
+
+            dlistMaterias.Text = string.Empty;
+            dlistProfesores.Text = string.Empty;
+
+
         }
 
         private void CargarComboMaterias(string condicion = "")
@@ -51,10 +61,12 @@ namespace MatriculaL_Web
                     dlistMaterias.DataTextField = "NOMBRE_MATERIA";
                     dlistMaterias.DataBind();
                     dlistMaterias.Items.Insert(0, new ListItem("SELECCIONE UNA MATERIA", String.Empty));
+
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 throw;
             }
 
@@ -80,8 +92,9 @@ namespace MatriculaL_Web
                     dlistProfesores.Items.Insert(0, new ListItem("SELECCIONE UN PROFESOR", String.Empty));
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 throw;
             }
 
@@ -105,8 +118,7 @@ namespace MatriculaL_Web
                 DS = logica.ListarRegistros(condicion);
                 if (DS.Tables[0].Rows.Count > 0)
                 {
-                    grdListaMA.DataSource = DS.Tables[0];
-                    grdListaMA.DataMember = DS.Tables[0].TableName;
+                    grdListaMA.DataSource = DS;
                     grdListaMA.DataBind();
                 }
             }
@@ -115,14 +127,16 @@ namespace MatriculaL_Web
                 System.Diagnostics.Debug.WriteLine(ex.ToString());
                 throw;
             }
-        }    
+        }
 
-            private EstidadMateriaAbierta GenerarEntidad()
+        private EstidadMateriaAbierta GenerarEntidad()
+        {
+            try
             {
                 EstidadMateriaAbierta materiasA = new EstidadMateriaAbierta();
-                if (Session["idMateriaAbierta"] != null)
+                if (Session["id_materia_Abierta"] != null)
                 {
-                    materiasA.IdMateriaAbierta = int.Parse(Session["idMateriaAbierta"].ToString());
+                    materiasA.IdMateriaAbierta = int.Parse(Session["id_materia_Abierta"].ToString());
                     materiasA.ExisteRegistro = true;
                 }
                 else
@@ -137,6 +151,12 @@ namespace MatriculaL_Web
 
                 return materiasA;
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                throw;
+            }
+        }
 
         protected void btnGuardar_Click1(object sender, EventArgs e)
         {
@@ -164,16 +184,51 @@ namespace MatriculaL_Web
                     script = string.Format("javascript:mostrarMensaje('No se pudo ejecutar la operacion')");
                     ScriptManager.RegisterStartupScript(this, typeof(string), "MensjeRetorno", script, true);
                 }
-                Response.Redirect("FrmMateriasWeb.aspx");
+                Response.Redirect("FrmAbrirMaterias.aspx");
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 script = string.Format("javascript:mostrarMensaje('{0}')", ex.Message);
                 ScriptManager.RegisterStartupScript(this, typeof(string), "MensjeRetorno", script, true);
             }
         }
-    
 
-    
+        protected void lnkModificar_Command(object sender, CommandEventArgs e)
+        {
+            Session["id_materia_Abierta"] = e.CommandArgument.ToString();
+            Response.Redirect("FrmAbrirMaterias.aspx");
+        }
+
+        protected void lnkEliminar_Command(object sender, CommandEventArgs e)
+        {
+            int id = int.Parse(e.CommandArgument.ToString());
+            MateriasAbiertasLN logica = new MateriasAbiertasLN(clsConfiguracion.getconnectionString);
+            EstidadMateriaAbierta materias;
+            string condicion;
+
+            try
+            {
+                condicion = string.Format("ID_MATERIA_ABIERTA={0}", id);
+                materias = logica.ObtenerMateria(condicion);
+                if (materias.ExisteRegistro)
+                {
+                    if (logica.Eliminar(materias) > 0)
+                    {
+                        //mensaje
+                        //script = string.Format("javascrip:mostrarMensaje('{0}')", ex.Message);
+                        //ScriptManager.RegisterStartupScript(this, typeof(string), "MensajeRetorno", script, true);
+                        CargarLista();
+                        //txtnombreM.Text = "";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                script = string.Format("javascript:mostrarMensaje('{0}')", ex.Message);
+                ScriptManager.RegisterStartupScript(this, typeof(string), "MensajeRetorno", script, true);
+            }
+        }
     }//clase
 }//namespace

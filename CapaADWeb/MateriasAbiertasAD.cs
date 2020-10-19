@@ -31,6 +31,14 @@ namespace CapaADWeb
 
         public int Insertar(EstidadMateriaAbierta pEntidadMateriasAbiertas)
         {
+            ProfesorAD profesorAD = new ProfesorAD(this._cadenaConexion);
+            var profesores = profesorAD.ListarRegistros1("ID_PROFESOR=" + pEntidadMateriasAbiertas.CedulaProfesor);
+            string cedula = string.Empty;
+            if (profesores.Count > 0) 
+            {
+                cedula = profesores[0].CedulaProfesor;
+            }
+
             SqlConnection vlo_sqlConexion = new SqlConnection(_cadenaConexion);
             SqlCommand vlo_sqlCommand = new SqlCommand();
             int idMateriaA = 0;
@@ -38,21 +46,23 @@ namespace CapaADWeb
             vlo_sqlCommand.Connection = vlo_sqlConexion;
             try
             {
-                sentencia = "INSERT INTO MATERIAS_ABIERTAS (ID_MATERIA, CEDULA_PROFESOR) " +
-                    "VALUES (@IdMateria, @CedulaProfesor) SELECT @@Identity";
+                sentencia = "INSERT INTO MATERIAS_ABIERTAS (ID_MATERIA, CEDULA_PROFESOR, GRUPO, CUPO, ANIO) " +
+                    "VALUES (@IdMateria, @CedulaProfesor, @GRUPO, @CUPO, @ANNIO) SELECT @@Identity";
 
                 vlo_sqlCommand.Parameters.AddWithValue("@IdMateria", pEntidadMateriasAbiertas.IdMateria);
-                vlo_sqlCommand.Parameters.AddWithValue("@CedulaProfesor", pEntidadMateriasAbiertas.CedulaProfesor);
-                //vlo_sqlCommand.Parameters.AddWithValue("@HorasTotales", pEntidadMateriasAbiertas.HorasTotales);
+                vlo_sqlCommand.Parameters.AddWithValue("@CedulaProfesor", cedula);
+                vlo_sqlCommand.Parameters.AddWithValue("@GRUPO", pEntidadMateriasAbiertas.Grupo);
+                vlo_sqlCommand.Parameters.AddWithValue("@CUPO", pEntidadMateriasAbiertas.Cupo);
+                vlo_sqlCommand.Parameters.AddWithValue("@ANNIO", pEntidadMateriasAbiertas.Anio);
 
                 vlo_sqlCommand.CommandText = sentencia;
                 vlo_sqlConexion.Open();
-                idMateriaA = Convert.ToInt32(vlo_sqlCommand.ExecuteScalar());
+                idMateriaA = vlo_sqlCommand.ExecuteNonQuery();
                 vlo_sqlConexion.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 throw;
             }
             finally
@@ -78,10 +88,11 @@ namespace CapaADWeb
                     sentencia = string.Format("{0} where {1}", sentencia, condicion);
                 }
                 vlo_adapter = new SqlDataAdapter(sentencia, vlo_conexion);
-                vlo_adapter.Fill(DS, "MATERIAS_ABIERTAS");
+                vlo_adapter.Fill(DS, "MateriasA");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 throw;
             }
             return DS;

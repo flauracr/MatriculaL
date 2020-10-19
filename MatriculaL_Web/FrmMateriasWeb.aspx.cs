@@ -25,7 +25,7 @@ namespace MatriculaL_Web
             }
             catch (Exception ex)
             {
-                //trhrow
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 script = string.Format("javascrip:mostrarMensaje('{0}')", ex.Message);
                 ScriptManager.RegisterStartupScript(this, typeof(string), "MensajeRetorno", script, true);
             }
@@ -51,8 +51,9 @@ namespace MatriculaL_Web
                     grdListaM.DataBind();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 throw;
             }
 
@@ -67,7 +68,7 @@ namespace MatriculaL_Web
             }
             catch (Exception ex)
             {
-                //trhrow
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 script = string.Format("javascrip:mostrarMensaje('{0}')", ex.Message);
                 ScriptManager.RegisterStartupScript(this, typeof(string), "MensajeRetorno", script, true);
             }
@@ -115,7 +116,7 @@ namespace MatriculaL_Web
             }
             catch (Exception ex)
             {
-                //trhrow
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 script = string.Format("javascript:mostrarMensaje('{0}')", ex.Message);
                 ScriptManager.RegisterStartupScript(this, typeof(string), "MensajeRetorno", script, true);
             }

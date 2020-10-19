@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CapaEntidadesWeb;
 using CapaADWeb;
 using System.Data;
@@ -38,8 +35,9 @@ namespace CapaLNWeb
             {
                 id = vlo_DAMateriaAbierta.Insertar(pEntidadMateriaAbierta);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 throw;
             }
             return id;
@@ -53,8 +51,9 @@ namespace CapaLNWeb
             {
                 DS = vlo_MateriasAbiertasAD.ListarRegistros(condicion);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 throw;
             }
             return DS;

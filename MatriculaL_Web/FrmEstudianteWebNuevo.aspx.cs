@@ -52,6 +52,7 @@ namespace MatriculaL_Web
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 script = string.Format("javascript:mostrarMensaje('{0}')", ex.Message);
                 ScriptManager.RegisterStartupScript(this, typeof(string), "MensjeRetorno", script, true);
                 Response.Redirect("FrmEstudianteWeb.aspx");
@@ -133,6 +134,7 @@ namespace MatriculaL_Web
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 script = string.Format("javascript:mostrarMensaje('{0}')", ex.Message);
                 ScriptManager.RegisterStartupScript(this, typeof(string), "MensjeRetorno", script, true);
             }
